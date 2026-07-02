@@ -1,6 +1,10 @@
 import streamlit as st
 
-from utils import load_csv, prepare_data, validate_columns
+from utils import (
+    load_csv,
+    prepare_data,
+    validate_columns
+)
 
 
 st.set_page_config(
@@ -36,7 +40,10 @@ def home_page():
     if uploaded_file is not None:
         try:
             raw_df = load_csv(uploaded_file)
-            missing_columns = validate_columns(raw_df)
+
+            missing_columns = validate_columns(
+                raw_df
+            )
 
             if missing_columns:
                 st.error(
@@ -45,23 +52,43 @@ def home_page():
                 )
                 st.stop()
 
-            clean_df, report = prepare_data(raw_df)
+            clean_df, report = prepare_data(
+                raw_df
+            )
 
+            # Save data so every page can access it
             st.session_state["raw_df"] = raw_df
             st.session_state["clean_df"] = clean_df
-            st.session_state["cleaning_report"] = report
-            st.session_state["uploaded_filename"] = uploaded_file.name
 
-            st.success("✅ Dataset uploaded and cleaned successfully!")
+            st.session_state[
+                "cleaning_report"
+            ] = report
+
+            st.session_state[
+                "uploaded_filename"
+            ] = uploaded_file.name
+
+            st.success(
+                "✅ Dataset uploaded and cleaned successfully!"
+            )
 
             col1, col2, col3, col4 = st.columns(4)
 
-            col1.metric("Original Rows", report["original_rows"])
-            col2.metric("Clean Rows", report["clean_rows"])
+            col1.metric(
+                "Original Rows",
+                report["original_rows"]
+            )
+
+            col2.metric(
+                "Clean Rows",
+                report["clean_rows"]
+            )
+
             col3.metric(
                 "Duplicates Removed",
                 report["duplicates_removed"]
             )
+
             col4.metric(
                 "Missing Values Found",
                 report["missing_values"]
@@ -76,11 +103,14 @@ def home_page():
 
             st.info(
                 "👈 Select Dashboard, Data Cleaning, "
-                "Business Insights or AI Assistant from the sidebar."
+                "Business Insights or AI Assistant "
+                "from the sidebar."
             )
 
         except Exception as error:
-            st.error(f"Could not process this dataset: {error}")
+            st.error(
+                f"Could not process this dataset: {error}"
+            )
 
     elif "clean_df" in st.session_state:
         filename = st.session_state.get(
@@ -88,29 +118,58 @@ def home_page():
             "Dataset"
         )
 
-        st.success(f"✅ {filename} is loaded.")
+        st.success(
+            f"✅ {filename} is currently loaded."
+        )
 
         st.dataframe(
             st.session_state["clean_df"].head(10),
             use_container_width=True
         )
 
-        if st.button("🗑️ Remove Dataset"):
-            for key in [
+        if st.button("🗑️ Remove Current Dataset"):
+            keys_to_remove = [
                 "raw_df",
                 "clean_df",
                 "cleaning_report",
                 "uploaded_filename"
-            ]:
-                st.session_state.pop(key, None)
+            ]
+
+            for key in keys_to_remove:
+                st.session_state.pop(
+                    key,
+                    None
+                )
 
             st.rerun()
 
     else:
-        st.info("Upload a CSV file to begin.")
+        st.info(
+            "Upload your sales CSV file to begin."
+        )
+
+        st.subheader(
+            "Required Dataset Columns"
+        )
+
+        st.code(
+            """
+Order ID
+Order Date
+Customer Name
+Segment
+Region
+State
+Category
+Sub-Category
+Product Name
+Sales
+Profit
+            """
+        )
 
 
-# Explicitly register every page
+# Create the navigation menu
 navigation = st.navigation(
     {
         "Main": [
@@ -128,7 +187,7 @@ navigation = st.navigation(
                 icon="📊"
             ),
             st.Page(
-                "pages/Data_Cleaning.py",
+                "pages/Data_cleaning.py",
                 title="Data Cleaning",
                 icon="🧹"
             ),
@@ -147,4 +206,6 @@ navigation = st.navigation(
     position="sidebar"
 )
 
+
+# Run the selected page
 navigation.run()
