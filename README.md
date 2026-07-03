@@ -266,9 +266,9 @@ To deploy your own version:
 
 **Kaustubh Valanjuwani**
 
-- GitHub: [YOUR_GITHUB_USERNAME](https://github.com/YOUR_GITHUB_USERNAME)
-- LinkedIn: [Connect with me](YOUR_LINKEDIN_PROFILE_URL)
-- Live project: [AI Sales Analytics Platform](YOUR_STREAMLIT_APP_URL)
+- GitHub: [charlie00769](https://github.com/charlie00769)
+- LinkedIn: [Connect with me](https://www.linkedin.com/in/kaustubh-valanjuwani-498007284/)
+- Live project: [AI Sales Analytics Platform](https://5uja4wg4jzyu5wgp2tvj4a.streamlit.app/)
 
 ## ⭐ Support
 
